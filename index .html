@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>One year of us</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300;1,9..144,400&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#efe9fa; --lav:#d9ccf2; --rose:#c9628a; --blush:#5a4a73; --gold:#9a7b52; --paper:#fffaf5; --ink:#4a3a62; --head:#3d2d5c; --pink:#f8d9e4; --sky:#d6e8f7;
+  --serif:'Fraunces',Georgia,serif; --sans:'Nunito Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--night);color:var(--blush);font-family:var(--sans);font-weight:300;line-height:1.7;
+  padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0);overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:-1;
+  background:radial-gradient(60% 40% at 15% 0%,var(--lav) 0%,transparent 70%),radial-gradient(50% 40% at 95% 35%,var(--sky) 0%,transparent 70%),radial-gradient(60% 40% at 10% 85%,var(--pink) 0%,transparent 70%),var(--night)}
+
+/* intro gate */
+#gate{position:fixed;inset:0;z-index:50;background:var(--night);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.6rem;text-align:center;padding:2rem;transition:opacity 1.4s ease,visibility 1.4s}
+#gate.gone{opacity:0;visibility:hidden}
+#gate p{font-family:var(--serif);font-style:italic;font-size:1.3rem;color:var(--rose)}
+#gate button{font:inherit;font-family:var(--serif);font-size:1.1rem;color:#fff;background:var(--rose);border:0;border-radius:999px;padding:.9rem 2.2rem;cursor:pointer}
+#gate button:focus-visible,a:focus-visible{outline:3px solid var(--rose);outline-offset:3px}
+.heart{width:56px;height:56px;animation:beat 1.6s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.18)}30%{transform:scale(1)}45%{transform:scale(1.12)}}
+
+/* hero */
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:4rem 1.5rem}
+.hero h1{font-family:var(--serif);font-weight:300;font-size:clamp(2.8rem,10vw,6.5rem);line-height:1.05;color:var(--head);letter-spacing:-.02em}
+.hero h1 em{font-weight:400;color:var(--rose)}
+.hero .sub{margin-top:1.4rem;font-family:var(--serif);font-style:italic;font-size:1.2rem;color:var(--gold)}
+.counter{display:flex;gap:1.6rem;margin-top:3rem;flex-wrap:wrap;justify-content:center}
+.counter div{min-width:4.2rem}
+.counter b{display:block;font-family:var(--serif);font-weight:300;font-size:2.4rem;color:var(--head);font-variant-numeric:tabular-nums}
+.counter span{font-size:.85rem;color:var(--rose)}
+.scroll{margin-top:3.5rem;color:var(--rose);font-size:.9rem;text-decoration:none}
+
+/* memories */
+.story{max-width:980px;margin:0 auto;padding:2rem 1.25rem 4rem}
+.mem{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;margin:6rem 0}
+.mem:nth-child(even) .photo{order:2}
+.photo{background:var(--paper);padding:.8rem .8rem 2.6rem;border-radius:3px;box-shadow:0 14px 34px rgba(110,80,160,.22);transform:rotate(-2.2deg);position:relative}
+.mem:nth-child(even) .photo{transform:rotate(2.2deg)}
+.slides{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}.slides::-webkit-scrollbar{display:none}
+.slides>*{flex:0 0 100%;scroll-snap-align:center}
+.photo img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;background:#e6dcf0}
+.count{position:absolute;top:1.3rem;right:1.3rem;background:rgba(61,45,92,.7);color:#fff;font-size:.8rem;padding:.1rem .6rem;border-radius:999px}
+.arr{position:absolute;top:42%;width:2.2rem;height:2.2rem;border:0;border-radius:50%;background:rgba(255,255,255,.8);color:var(--head);font-size:1.5rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0 0 .2rem}
+.arr.prev{left:1.2rem}.arr.next{right:1.2rem}.arr:focus-visible{outline:3px solid var(--rose)}
+.swipe{display:block;text-align:center;font-size:.8rem;color:var(--gold);margin-top:.4rem}
+.photo .ph{aspect-ratio:4/5;display:flex;align-items:center;justify-content:center;text-align:center;padding:1rem;color:#8a6a74;font-size:.85rem;background:repeating-linear-gradient(45deg,#f3ecfa,#f3ecfa 12px,#ebe1f6 12px,#ebe1f6 24px)}
+.photo figcaption{position:absolute;left:0;right:0;bottom:.7rem;text-align:center;font-family:var(--serif);font-style:italic;color:var(--ink);font-size:.95rem}
+.mem h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.15;color:var(--head);margin-bottom:.4rem}
+.mem .when{color:var(--gold);font-family:var(--serif);font-style:italic;margin-bottom:1rem}
+.mem p{max-width:34ch;font-size:1.05rem}
+.reveal{opacity:0;transition:opacity 1.2s ease}
+.reveal.in{opacity:1}
+
+/* letter */
+.letter{max-width:640px;margin:2rem auto 6rem;padding:3rem 2rem;background:#fbf4ea;color:var(--ink);border-radius:4px;box-shadow:0 16px 44px rgba(110,80,160,.22)}
+.letter h2{font-family:var(--serif);font-weight:400;font-size:2rem;margin-bottom:1.2rem}
+.letter p{font-family:var(--serif);font-size:1.1rem;line-height:1.85;margin-bottom:1rem}
+.letter .sign{font-style:italic;text-align:right;margin-top:1.6rem}
+.end{text-align:center;padding:2rem 1.5rem 6rem}
+.end h2{font-family:var(--serif);font-weight:300;font-size:clamp(2rem,6vw,3.6rem);color:var(--head)}
+.end p{color:var(--rose);margin-top:.6rem;font-family:var(--serif);font-style:italic}
+
+#hearts{position:fixed;inset:0;pointer-events:none;z-index:5;overflow:hidden}
+#hearts i{position:absolute;bottom:-30px;color:var(--rose);opacity:0;animation:float linear forwards}
+@keyframes float{0%{opacity:0;transform:translateY(0)}10%{opacity:.6}100%{opacity:0;transform:translateY(-110vh) translateX(var(--dx))}}
+
+@media(max-width:720px){
+  .mem{grid-template-columns:1fr;gap:1.8rem;margin:4rem 0}
+  .mem:nth-child(even) .photo{order:0}
+  .mem p{max-width:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .heart{animation:none}.reveal{opacity:1;transition:none}#hearts{display:none}html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <svg class="heart" viewBox="0 0 24 24" fill="#c9628a" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 5 6.4 5c2 0 3.7 1.1 5.6 3.2C13.900 6.100 15.600 5 17.600 5 21 5 23.100 8.400 21.600 11.800 19.500 16.400 12 21 12 21z"/></svg>
+  <p id="gateText">I made something for you.</p>
+  <button id="open">Open</button>
+</div>
+
+<div id="hearts" aria-hidden="true"></div>
+
+<header class="hero">
+  <h1>One year of <em id="us">us</em></h1>
+  <p class="sub" id="dateLine">3 October</p>
+  <div class="counter" aria-label="Time together">
+    <div><b id="cd">0</b><span>days</span></div>
+    <div><b id="ch">0</b><span>hours</span></div>
+    <div><b id="cm">0</b><span>minutes</span></div>
+    <div><b id="cs">0</b><span>seconds</span></div>
+  </div>
+  <a class="scroll" href="#story">Scroll down, our year is below</a>
+</header>
+
+<main class="story" id="story"></main>
+
+<section class="letter">
+  <h2 id="letterTitle">To my favourite person</h2>
+  <div id="letterBody"></div>
+  <p class="sign" id="sign">Yours,<br>Tejan</p>
+</section>
+
+<footer class="end">
+  <h2>Happy anniversary</h2>
+  <p>Here's to every date still ahead of us.</p>
+</footer>
+
+<script>
+/* ====== EDIT THIS PART ====== */
+const HER_NAME = "My love";            // her name or nickname
+const MY_NAME  = "Tejan";
+const SLIDE_MS = 1000;               // photos change automatically every 1 second
+const START    = "2025-10-03T00:00:00+05:45"; // day you got together (Nepal time)
+
+// Put photos in an "images" folder next to index.html and match these file names.
+// You can add several photos per memory by changing img to a list, but one is fine to start.
+const MEMORIES = [
+  {img:"whoopie-land", n:1,  title:"Whoopie Land",   when:"Our first big date",   text:"We screamed on the rides, laughed at everything and I forgot there was anyone else in the park.", cap:"Whoopie Land"},
+  {img:"matidevi",     n:3,  title:"Matidevi, on Dashain", when:"The day we ran away", text:"Your parents showed up and we ran. Still the funniest, most nervous few minutes of my life, and I'd do it again.", cap:"Matidevi Temple"},
+  {img:"movie",        n:1,  title:"Movie date",     when:"Dark room, your hand", text:"I don't remember the movie. I remember you.", cap:"Movie night"},
+  {img:"archery",      n:2,  title:"Archery date",   when:"You aimed, I stared",  text:"You hit the target more than I did, and you were very proud. So was I.", cap:"Archery"},
+  {img:"hands",        n:2,  title:"Hand in hand",   when:"My favourite place to hold on", text:"Your hand in mine, wherever we were going. It always fit.", cap:"Hand in hand"},
+  {img:"cafe",         n:28, title:"Cafe hopping",   when:"One more cafe?",       text:"Cafe after cafe, coffee getting cold because we kept talking. Swipe through, there are a lot because we went to a lot.", cap:"Cafe days"},
+  {img:"world-cup",    n:2,  title:"World Cup night", when:"A night out with friends", text:"Loud, happy, and you were right next to me the whole night.", cap:"World Cup night"},
+  {img:"halloween",    n:2,  title:"Halloween",      when:"Spooky and silly",     text:"Costumes, chaos, and you being the best part of the night.", cap:"Halloween"},
+  {img:"offroad",      n:2,  title:"New Year's Eve", when:"Off-road, then a cafe", text:"Mud, bumps and then a warm cafe to end the year. I started the new year next to you.", cap:"After the off-road"},
+  {img:"nagarkot",     n:3,  title:"Nagarkot in winter", when:"Cold air, warm hands", text:"Freezing, wrapped up, watching the hills. You made the cold feel like nothing.", cap:"Nagarkot"},
+  {img:"pokhara",      n:4,  title:"Pokhara",        when:"The lake and you",     text:"Slow mornings by the water. If I could freeze one trip, it might be this one.", cap:"Pokhara"},
+  {img:"before-australia", n:4, title:"Before Australia", when:"The last days together", text:"These photos are my favourite and my hardest. Distance is just a number when it's you.", cap:"Until we meet again"},
+  {img:"video-call",   n:2,  title:"Across the ocean", when:"Video calls from Australia", text:"A screen is not enough, but seeing your face still makes my whole day.", cap:"Video call"}
+];
+
+const LETTER = [
+  "A year ago I didn't know how many places I'd want to remember with one person.",
+  "Temples, cafes, hills, lakes, a muddy road on New Year's Eve, and one very quick escape from your parents. Every one of them is better because you were there.",
+  "You live far away now, and I miss you in every one of these photos. But I'm proud of you, and I'm yours, here or across any ocean.",
+  "Thank you for this year. I'd like the next one, and the one after that."
+];
+/* ====== END EDIT ====== */
+
+document.getElementById('us').textContent = HER_NAME === "My love" ? "us" : "us";
+document.getElementById('gateText').textContent = HER_NAME === "My love" ? "I made something for you." : "I made something for you, " + HER_NAME + ".";
+document.getElementById('sign').innerHTML = "Yours,<br>" + MY_NAME;
+document.getElementById('letterTitle').textContent = "To " + (HER_NAME === "My love" ? "my favourite person" : HER_NAME);
+document.getElementById('dateLine').textContent = new Date(START).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+
+// memories
+const story = document.getElementById('story');
+MEMORIES.forEach(m => {
+  const el = document.createElement('article');
+  el.className = 'mem reveal';
+  let slides = '';
+  for (let i = 1; i <= m.n; i++) slides += `<img src="images/${m.img}-${i}.jpg" alt="${m.title} ${i}" loading="lazy">`;
+  const nav = m.n > 1 ? `<span class="count">1 / ${m.n}</span><button class="arr prev" aria-label="Previous photo">&#8249;</button><button class="arr next" aria-label="Next photo">&#8250;</button>` : '';
+  el.innerHTML = `<figure class="photo"><div class="slides">${slides}</div>${nav}<figcaption>${m.cap}</figcaption></figure>
+    <div><h2>${m.title}</h2><p class="when">${m.when}</p><p>${m.text}</p></div>`;
+  const sl = el.querySelector('.slides');
+  sl.querySelectorAll('img').forEach((img, i) => img.addEventListener('error', () => {
+    const d = document.createElement('div'); d.className = 'ph';
+    d.textContent = 'Add photo: images/' + m.img + '-' + (i + 1) + '.jpg'; img.replaceWith(d);
+  }));
+  const c = el.querySelector('.count');
+  if (c) sl.addEventListener('scroll', () => { c.textContent = (Math.round(sl.scrollLeft / sl.clientWidth) + 1) + ' / ' + m.n; }, {passive:true});
+  if (m.n > 1) {
+    let paused = false, resume, visible = false;
+    const go = d => {
+      const i = Math.round(sl.scrollLeft / sl.clientWidth) + d;
+      sl.scrollTo({left: ((i % m.n) + m.n) % m.n * sl.clientWidth, behavior: 'smooth'});
+    };
+    const hold = () => { paused = true; clearTimeout(resume); resume = setTimeout(() => paused = false, 5000); };
+    el.querySelector('.prev').addEventListener('click', () => { hold(); go(-1); });
+    el.querySelector('.next').addEventListener('click', () => { hold(); go(1); });
+    ['touchstart','pointerdown','wheel'].forEach(ev => sl.addEventListener(ev, hold, {passive:true}));
+    new IntersectionObserver(es => visible = es[0].isIntersecting, {threshold:.4}).observe(el);
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches)
+      setInterval(() => { if (visible && !paused && !document.hidden) go(1); }, SLIDE_MS);
+  }
+  story.appendChild(el);
+});
+document.getElementById('letterBody').innerHTML = LETTER.map(t => `<p>${t}</p>`).join('');
+
+// reveal on scroll
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), {threshold:.2});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// counter
+const t0 = new Date(START).getTime();
+function tick(){
+  let s = Math.max(0, Math.floor((Date.now() - t0) / 1000));
+  cd.textContent = Math.floor(s/86400); ch.textContent = Math.floor(s%86400/3600);
+  cm.textContent = Math.floor(s%3600/60); cs.textContent = s%60;
+}
+tick(); setInterval(tick, 1000);
+
+// floating hearts after opening
+function hearts(){
+  const box = document.getElementById('hearts');
+  setInterval(() => {
+    const h = document.createElement('i');
+    h.textContent = '♥'; h.style.left = Math.random()*100 + 'vw';
+    h.style.fontSize = (10 + Math.random()*16) + 'px';
+    h.style.setProperty('--dx', (Math.random()*80-40) + 'px');
+    h.style.animationDuration = (8 + Math.random()*6) + 's';
+    box.appendChild(h); setTimeout(() => h.remove(), 15000);
+  }, 1400);
+}
+document.getElementById('open').addEventListener('click', () => {
+  document.getElementById('gate').classList.add('gone'); hearts();
+});
+</script>
+</body>
+</html>
