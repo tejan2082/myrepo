@@ -47,6 +47,9 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;
 .slides{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}.slides::-webkit-scrollbar{display:none}
 .slides>*{flex:0 0 100%;scroll-snap-align:center}
 .photo img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;background:#e6dcf0}
+.sl{position:relative;aspect-ratio:4/5;overflow:hidden;background:#e6dcf0}
+.sl::before{content:"";position:absolute;inset:-24px;background:var(--bg) center/cover;filter:blur(20px) saturate(1.1);opacity:.85}
+.photo .sl img{position:relative;width:100%;height:100%;aspect-ratio:auto;object-fit:contain}
 .count{position:absolute;top:1.3rem;right:1.3rem;background:rgba(61,45,92,.7);color:#fff;font-size:.8rem;padding:.1rem .6rem;border-radius:999px}
 .arr{position:absolute;top:42%;width:2.2rem;height:2.2rem;border:0;border-radius:50%;background:rgba(255,255,255,.8);color:var(--head);font-size:1.5rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0 0 .2rem}
 .arr.prev{left:1.2rem}.arr.next{right:1.2rem}.arr:focus-visible{outline:3px solid var(--rose)}
@@ -138,7 +141,7 @@ const MEMORIES = [
   {img:"halloween",    n:2,  title:"Halloween",      when:"Spooky and silly",     text:"Costumes, chaos, and you being the best part of the night.", cap:"Halloween"},
   {img:"offroad",      n:2,  title:"New Year's Eve", when:"Off-road, then a cafe", text:"Mud, bumps and then a warm cafe to end the year. I started the new year next to you.", cap:"After the off-road"},
   {img:"nagarkot",     n:3,  title:"Nagarkot in winter", when:"Cold air, warm hands", text:"Freezing, wrapped up, watching the hills. You made the cold feel like nothing.", cap:"Nagarkot"},
-  {img:"valentines",   n:1,  title:"Valentine's Day", when:"Our first one", text:"Every day feels like Valentine's with you, but this one was ours on purpose.", cap:"14 February"},
+  {img:"valentines",   n:3,  title:"Valentine's Day", when:"Our first one", text:"Every day feels like Valentine's with you, but this one was ours on purpose.", cap:"14 February"},
   {img:"pokhara",      n:4,  title:"Pokhara",        when:"The lake and you",     text:"Slow mornings by the water. If I could freeze one trip, it might be this one.", cap:"Pokhara"},
   {img:"before-australia", n:4, title:"Before Australia", when:"The last days together", text:"These photos are my favourite and my hardest. Distance is just a number when it's you.", cap:"Until we meet again"},
   {img:"video-call",   n:2,  title:"Across the ocean", when:"Video calls from Australia", text:"A screen is not enough, but seeing your face still makes my whole day.", cap:"Video call"}
@@ -164,14 +167,14 @@ MEMORIES.forEach(m => {
   const el = document.createElement('article');
   el.className = 'mem reveal';
   let slides = '';
-  for (let i = 1; i <= m.n; i++) slides += `<img src="images/${m.img}-${i}.jpg" alt="${m.title} ${i}" loading="lazy">`;
+  for (let i = 1; i <= m.n; i++) slides += `<div class="sl" style="--bg:url(images/${m.img}-${i}.jpg)"><img src="images/${m.img}-${i}.jpg" alt="${m.title} ${i}" loading="lazy"></div>`;
   const nav = m.n > 1 ? `<span class="count">1 / ${m.n}</span><button class="arr prev" aria-label="Previous photo">&#8249;</button><button class="arr next" aria-label="Next photo">&#8250;</button>` : '';
   el.innerHTML = `<figure class="photo"><div class="slides">${slides}</div>${nav}<figcaption>${m.cap}</figcaption></figure>
     <div><h2>${m.title}</h2><p class="when">${m.when}</p><p>${m.text}</p></div>`;
   const sl = el.querySelector('.slides');
   sl.querySelectorAll('img').forEach((img, i) => img.addEventListener('error', () => {
     const d = document.createElement('div'); d.className = 'ph';
-    d.textContent = 'Add photo: images/' + m.img + '-' + (i + 1) + '.jpg'; img.replaceWith(d);
+    d.textContent = 'Add photo: images/' + m.img + '-' + (i + 1) + '.jpg'; img.parentElement.replaceWith(d);
   }));
   const c = el.querySelector('.count');
   if (c) sl.addEventListener('scroll', () => { c.textContent = (Math.round(sl.scrollLeft / sl.clientWidth) + 1) + ' / ' + m.n; }, {passive:true});
