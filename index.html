@@ -27,6 +27,11 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;
 .heart{width:56px;height:56px;animation:beat 1.6s ease-in-out infinite}
 @keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.18)}30%{transform:scale(1)}45%{transform:scale(1.12)}}
 
+/* music toggle */
+#music{position:fixed;right:1rem;bottom:calc(1rem + env(safe-area-inset-bottom,0px));z-index:10;width:2.8rem;height:2.8rem;border:0;border-radius:50%;background:rgba(255,255,255,.85);color:var(--head);font-size:1.2rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(110,80,160,.25)}
+#music[hidden]{display:none}
+#music:focus-visible{outline:3px solid var(--rose);outline-offset:3px}
+
 /* hero */
 .hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:4rem 1.5rem}
 .hero h1{font-family:var(--serif);font-weight:300;font-size:clamp(2.8rem,10vw,6.5rem);line-height:1.05;color:var(--head);letter-spacing:-.02em}
@@ -93,6 +98,9 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;
   <button id="open">Open</button>
 </div>
 
+<audio id="bgm" loop preload="auto"></audio>
+<button id="music" type="button" aria-label="Pause music" hidden>🔊</button>
+
 <div id="hearts" aria-hidden="true"></div>
 
 <header class="hero">
@@ -126,6 +134,9 @@ const HER_NAME = "My love";            // her name or nickname
 const MY_NAME  = "ToothPick";
 const SLIDE_MS = 1000;               // photos change automatically every 1 second
 const START    = "2025-10-03T00:00:00+05:45"; // day you got together (Nepal time)
+const MUSIC    = "music.mp3";        // put your song next to index.html with this exact file name
+const AUTO_SCROLL_SPEED = 40;        // pixels per second (lower = slower, try 25 to 60)
+const SCROLL_PAUSE_MS   = 4000;      // how long auto scroll waits after she scrolls by herself
 
 // Put photos in an "images" folder next to index.html and match these file names.
 // You can add several photos per memory by changing img to a list, but one is fine to start.
@@ -222,8 +233,53 @@ function hearts(){
     box.appendChild(h); setTimeout(() => h.remove(), 15000);
   }, 1400);
 }
+
+// background music (starts when she taps Open; she can mute with the round button)
+const bgm = document.getElementById('bgm'), musicBtn = document.getElementById('music');
+bgm.src = MUSIC;
+bgm.volume = 0.6;
+function showMusicState(){
+  const on = !bgm.paused;
+  musicBtn.textContent = on ? '🔊' : '🔇';
+  musicBtn.setAttribute('aria-label', on ? 'Pause music' : 'Play music');
+}
+musicBtn.addEventListener('click', () => {
+  if (bgm.paused) bgm.play().catch(() => {}); else bgm.pause();
+});
+bgm.addEventListener('play', showMusicState);
+bgm.addEventListener('pause', showMusicState);
+bgm.addEventListener('error', () => { musicBtn.hidden = true; });
+document.addEventListener('visibilitychange', () => { if (document.hidden && !bgm.paused) { bgm.pause(); bgm.dataset.auto = '1'; } else if (!document.hidden && bgm.dataset.auto) { delete bgm.dataset.auto; bgm.play().catch(() => {}); } });
+
+// slow auto scroll (starts after Open; pauses when she scrolls herself, then continues)
+let autoY = 0, autoLastSet = 0, autoLastT = 0, autoIdleUntil = 0;
+const autoPause = () => { autoIdleUntil = Date.now() + SCROLL_PAUSE_MS; };
+['wheel','touchstart','touchmove','keydown'].forEach(ev => window.addEventListener(ev, autoPause, {passive:true}));
+window.addEventListener('pointerdown', e => { if (!e.target.closest('#music')) autoPause(); }, {passive:true});
+window.addEventListener('scroll', () => { if (Math.abs(window.scrollY - autoLastSet) > 3) autoPause(); }, {passive:true});
+function autoStep(t){
+  const dt = Math.min(0.1, (t - autoLastT) / 1000); autoLastT = t;
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  if (Date.now() < autoIdleUntil) {
+    autoY = window.scrollY;
+  } else if (autoY < max - 1) {
+    autoY = Math.min(max, autoY + AUTO_SCROLL_SPEED * dt);
+    autoLastSet = autoY;
+    window.scrollTo({top: autoY, behavior: 'instant'});
+  }
+  requestAnimationFrame(autoStep);
+}
+function startAutoScroll(){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  autoY = window.scrollY; autoLastSet = autoY; autoLastT = performance.now();
+  requestAnimationFrame(autoStep);
+}
+
 document.getElementById('open').addEventListener('click', () => {
   document.getElementById('gate').classList.add('gone'); hearts();
+  musicBtn.hidden = false;
+  bgm.play().catch(showMusicState);
+  setTimeout(startAutoScroll, 1400);
 });
 </script>
 </body>
